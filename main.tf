@@ -5,7 +5,9 @@ variable "region" {
 
 provider "aws" {
   region                   = var.region
-  shared_credentials_files = ["~/Google Drive/My Drive/secrets/gadyterracredential"]
+  shared_credentials_files = ["~/Google Drive/My Drive/secrets/gadyterracredentials"]
+  profile                  = "terraform"
+
 }
 
 data "aws_ami" "amazon_linux" {
