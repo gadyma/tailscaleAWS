@@ -30,7 +30,7 @@ resource "aws_instance" "tailscale_exit_node" {
     echo 'net.ipv4.ip_forward = 1' >> /etc/sysctl.conf
     echo 'net.ipv6.conf.all.forwarding = 1' >> /etc/sysctl.conf
     sysctl -p
-    tailscale up --authkey=${file("~/.secrets/tailscale.key")} --advertise-exit-node
+    tailscale up --authkey=${file("~/.secrets/tailscale.key")} --advertise-exit-node --advertise-tags=tag:exit-node
   EOF
   
   tags = {
