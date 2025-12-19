@@ -3,15 +3,21 @@ variable "region" {
   type        = string
 }
 
-variable "tailscale_api_key" {
-  description = "Tailscale API key"
+variable "tailscale_api_key_parameter" {
+  description = "AWS SSM Parameter name for Tailscale API key"
   type        = string
-  sensitive   = true
+  default     = "/tailscale/api_key"
 }
 
 variable "tailnet" {
   description = "Your tailnet name"
   type        = string
+}
+
+variable "aws_profile" {
+  description = "AWS profile to use"
+  type        = string
+  default     = "default"
 }
 
 terraform {
@@ -26,13 +32,24 @@ terraform {
 }
 
 provider "aws" {
-  region                   = var.region
-  shared_credentials_files = [pathexpand("~/Google Drive/My Drive/secrets/gadyterracredentials")]
-  profile                  = "terraform"
+  region  = var.region
+  profile = var.aws_profile
+}
+
+# Separate provider for parameter store in il-central-1
+provider "aws" {
+  alias   = "il_central"
+  region  = "il-central-1"
+  profile = var.aws_profile
+}
+
+data "aws_ssm_parameter" "tailscale_api_key" {
+  provider = aws.il_central
+  name     = var.tailscale_api_key_parameter
 }
 
 provider "tailscale" {
-  api_key = var.tailscale_api_key
+  api_key = data.aws_ssm_parameter.tailscale_api_key.value
   tailnet = var.tailnet
 }
 
