@@ -78,8 +78,10 @@ resource "tailscale_tailnet_key" "exit_node" {
 
 resource "aws_instance" "tailscale_exit_node" {
   ami           = data.aws_ami.amazon_linux.id
-  instance_type = "t3.nano"
-  
+  instance_type = var.instance_type
+  #tags = merge(var.custom_tags, { Name = "exit-${var.region}" })
+
+
   user_data = <<-EOF
     #!/bin/bash
     curl -fsSL https://tailscale.com/install.sh | sh
