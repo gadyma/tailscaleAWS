@@ -9,9 +9,10 @@ variable "tailscale_api_key_parameter" {
   default     = "/tailscale/api_key"
 }
 
-variable "tailnet" {
-  description = "Your tailnet name"
+variable "tailscale_tailnet_parameter" {
+  description = "AWS SSM Parameter name for Tailscale tailnet"
   type        = string
+  default     = "/tailscale/tailnet"
 }
 
 variable "aws_profile" {
@@ -48,10 +49,16 @@ data "aws_ssm_parameter" "tailscale_api_key" {
   name     = var.tailscale_api_key_parameter
 }
 
+data "aws_ssm_parameter" "tailscale_tailnet" {
+  provider = aws.il_central
+  name     = var.tailscale_tailnet_parameter
+}
+
 provider "tailscale" {
   api_key = data.aws_ssm_parameter.tailscale_api_key.value
-  tailnet = var.tailnet
+  tailnet = data.aws_ssm_parameter.tailscale_tailnet.value
 }
+
 
 data "aws_ami" "amazon_linux" {
   most_recent = true
