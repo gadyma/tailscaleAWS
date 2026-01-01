@@ -1,11 +1,10 @@
+# Terraform
 *.tfstate
 *.tfstate.*
 .terraform/
+.terraform.lock.hcl
 crash.log
 crash.*.log
-.terraform.lock.hcl
-*.tfvars
-*.tfvars.json
 override.tf
 override.tf.json
 *_override.tf
@@ -13,3 +12,23 @@ override.tf.json
 .terraformrc
 terraform.rc
 *.tfplan
+
+# Secrets - NEVER commit these
+*.tfvars
+!*.tfvars.example
+secrets/
+.secrets/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
